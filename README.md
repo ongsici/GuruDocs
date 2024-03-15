@@ -1,5 +1,5 @@
 ## SECTION 1 : PROJECT TITLE
-## CHATBOT FOR QUERYING DOCUMENTS USING RAG
+## GURUDOCS: CHATBOT FOR QUERYING DOCUMENTS USING RAG and LLM
 
 
 ---
@@ -41,8 +41,13 @@
 pip install -r requirements.txt
 ollama pull mistral llama2
 ```
+### Start Application
 
+```
+streamlit run app.py
+```
 
+Once you have started the application, your webpage should automatically pop up. You can then upload your PDF documents and chat with GuruDocs!
 
 
 ---
