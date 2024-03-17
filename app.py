@@ -2,13 +2,23 @@ import streamlit as st
 from htmlTemplates import css, bot_template, user_template
 import os
 from llm_utils import get_conversation_chain, get_document_chunks, get_pypdf_text, get_vectorstore
+import glob
 
 def save_file_to_tmp(pdf_docs):
     file_paths = []
+    tmp_dir = "./tmp"
+    os.makedirs(tmp_dir, exist_ok=True)
+    print(f'tmp dir created')
+
+    #cleanup 
+    prev_files = glob.glob(f'{tmp_dir}/*')
+    for f in prev_files:
+        if os.path.isfile(f):
+            os.remove(f) 
+
     for i in range(len(pdf_docs)):
         bytes_data = pdf_docs[i].read() 
-        # print(pdf_docs[i].name, bytes_data)
-        curr_file_path = os.path.join("./tmp", pdf_docs[i].name)
+        curr_file_path = os.path.join(tmp_dir, pdf_docs[i].name)
         with open(curr_file_path, "wb") as f:
             f.write(bytes_data)
         file_paths.append(curr_file_path)
