@@ -11,8 +11,6 @@ import shutil
 
 def get_pypdf_text(file_paths):
     for file_path in file_paths:
-        print(f'file path {file_path}')
-        print(os.path.abspath(file_path))
         loader = PyPDFLoader(os.path.abspath(file_path))
         pages = loader.load()
 
@@ -33,8 +31,12 @@ def get_document_chunks(pages):
 def get_vectorstore(text_chunks):
     embeddings = OllamaEmbeddings()
     persist_directory = 'docs/chroma/'
+    # cleanup
+    if os.path.exists(persist_directory):
+        shutil.rmtree(persist_directory)
+    os.makedirs(persist_directory, exist_ok=True)
     print(f'Starting storing chunks as embeddings into vector DB')
-    shutil.rmtree(persist_directory)
+    
     vectorstore = Chroma.from_documents(
         documents=text_chunks,
         embedding=embeddings,
