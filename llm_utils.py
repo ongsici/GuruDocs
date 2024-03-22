@@ -5,8 +5,12 @@ from langchain_community.vectorstores import FAISS, Chroma
 from langchain_community.chat_models import ChatOllama
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
+from langchain import PromptTemplate
+from langchain.chains.summarize import load_summarize_chain
+
 import os
 import shutil
+import pandas as pd
 
 
 def get_pypdf_text(file_paths):
@@ -59,3 +63,53 @@ def get_conversation_chain(vectorstore, model_option):
         memory=memory
     )
     return conversation_chain
+
+def get_summary(pages, model_option):
+    final_mp_data = []
+    llm = ChatOllama(model=model_option, temperature=0)
+
+    map_prompt_template = """
+                      Write a summary of this chunk of text that includes the main points and any important details.
+                      {text}
+                      """
+
+    map_prompt = PromptTemplate(template=map_prompt_template, input_variables=["text"])
+
+    combine_prompt_template = """
+                        Write a concise summary of the following text delimited by triple backquotes.
+                        Return your response in bullet points which covers the key points of the text.
+                        ```{text}```
+                        BULLET POINT SUMMARY:
+                        """
+
+    combine_prompt = PromptTemplate(
+        template=combine_prompt_template, input_variables=["text"]
+        )
+    
+    map_reduce_chain = load_summarize_chain(
+                        llm,
+                        chain_type="map_reduce",
+                        map_prompt=map_prompt,
+                        combine_prompt=combine_prompt,
+                        return_intermediate_steps=True,
+                    )
+    map_reduce_outputs = map_reduce_chain({"input_documents": pages})
+    
+    for doc, out in zip(
+        map_reduce_outputs["input_documents"], map_reduce_outputs["intermediate_steps"]
+    ):
+        output = {}
+        output["file_name"] = (doc.metadata["source"])
+        output["file_type"] = (doc.metadata["source"])
+        output["page_number"] = doc.metadata["page"]
+        output["chunks"] = doc.page_content
+        output["concise_summary"] = out
+        final_mp_data.append(output)
+
+    pdf_mp_summary = pd.DataFrame.from_dict(final_mp_data)
+    pdf_mp_summary = pdf_mp_summary.sort_values(
+        by=["file_name", "page_number"]
+    )  # sorting the dataframe by filename and page_number
+    pdf_mp_summary.reset_index(inplace=True, drop=True)
+    summary = pdf_mp_summary["concise_summary"].iloc[0]
+    return summary
