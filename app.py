@@ -1,7 +1,7 @@
 import streamlit as st
 from htmlTemplates import css, bot_template, user_template
 import os
-from llm_utils import get_conversation_chain, get_document_chunks, get_pypdf_text, get_vectorstore
+from llm_utils import get_conversation_chain, get_document_chunks, get_pypdf_text, get_vectorstore, get_summary
 import glob
 
 def save_file_to_tmp(pdf_docs):
@@ -74,6 +74,12 @@ def main():
                 file_paths = save_file_to_tmp(pdf_docs)
                 # get pdf text
                 raw_text = get_pypdf_text(file_paths)
+
+                # get summary
+                summary = get_summary(raw_text, model_option)
+                # TODO: add document(s) summary from LLM
+                st.subheader("Summary")
+                st.write(f'Document summary here {summary}')
 
                 # get the text chunks
                 text_chunks = get_document_chunks(raw_text)
