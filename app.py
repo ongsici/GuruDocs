@@ -1,7 +1,7 @@
 import streamlit as st
 from htmlTemplates import css, bot_template, user_template
 import os
-from llm_utils import get_conversation_chain, get_document_chunks, get_pypdf_text, get_vectorstore, get_summary
+from api.llm_utils import get_conversation_chain, get_document_chunks, get_pypdf_text, get_vectorstore, get_summary
 import glob
 
 def save_file_to_tmp(pdf_docs):

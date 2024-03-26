@@ -1,7 +1,7 @@
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.ollama import OllamaEmbeddings
-from langchain_community.vectorstores import FAISS, Chroma
+from langchain_community.vectorstores import Chroma
 from langchain_community.chat_models import ChatOllama
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
