@@ -11,4 +11,4 @@ class QueryInput(BaseModel):
 
 class SummaryInput(BaseModel):
     model_option: str
-    pages: List
+    pages_id: str

@@ -7,6 +7,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from langchain import PromptTemplate
 from langchain.chains.summarize import load_summarize_chain
+from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 
 import os
 import shutil
@@ -31,9 +32,15 @@ def get_document_chunks(pages):
     print(f'Completed splitting chunks')
     return chunks
 
+def get_embedding():
+    model_name = "BAAI/bge-small-en"
+    model_kwargs = {"device": "cpu"}
+    encode_kwargs = {"normalize_embeddings": True}
+    hf_embd = HuggingFaceBgeEmbeddings(model_name=model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs)
+    return hf_embd
 
 def get_vectorstore(text_chunks):
-    embeddings = OllamaEmbeddings()
+    embeddings = get_embedding()
     persist_directory = 'docs/chroma/'
     # cleanup
     if os.path.exists(persist_directory):
