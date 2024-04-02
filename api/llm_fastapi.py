@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from api.api_data_models import FilePath, SummaryInput, QueryInput
+from api.api_data_models import FilePath, SummaryInput, QueryInput, newQueryInput
 
 import uuid
 
 # Your existing code for functions
-from api.llm_utils import get_pypdf_text, get_document_chunks, get_vectorstore, get_conversation_chain, get_summary
+from api.llm_utils import get_pypdf_text, get_document_chunks, get_vectorstore, get_conversation_chain, get_summary, conversational_rag_chain
 
 app = FastAPI()
 vectorstore_dict = {}
@@ -45,6 +45,22 @@ def query(item: QueryInput):
     response = conversation_chain({'question': item.user_query})
 
     return {"response": response}
+
+@app.post("/newquery")
+#async
+def newQuery(item:newQueryInput):
+
+    conversation_rag = conversational_rag_chain(vectorstore_dict[item.vectorstore_id], item.model_option)
+    response = conversation_rag.invoke(
+        {"input":item.user_query},
+        config={
+            "configurable":{"session_id":item.session_id}
+        },
+    )["answer"]
+    # response = conversation_rag({'question': item.user_query})
+
+    return {"response": response}
+    
 
 @app.post("/summary")
 # async 
