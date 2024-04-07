@@ -9,6 +9,12 @@ class QueryInput(BaseModel):
     vectorstore_id: str
     user_query: str
 
+class newQueryInput(BaseModel):
+    model_option: str
+    vectorstore_id: str
+    user_query: str
+    session_id: str
+
 class SummaryInput(BaseModel):
     model_option: str
-    pages: List
+    pages_id: str
