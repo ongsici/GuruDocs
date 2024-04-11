@@ -56,8 +56,6 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
         const filename = file.name;
         setFileName(filename)
 
-        console.log('Uploaded filename:', fileName);
-
         reader.onload = function (e) {
           const base64String = btoa(e.target.result);
           fileBase64StringArr.push(base64String);
@@ -74,12 +72,9 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
   };
 
   useEffect(() => {
-    // console.log(postFilesSuccess, postFilesResponse)
     if (postFilesSuccess && postFilesResponse) {
       setPagesUuidList(postFilesResponse.pages_uuid_list); 
-      setVectorstoreUuidList(postFilesResponse.vectorstore_uuid_list)
-      console.log(1,"pages", pagesUuidList)
-      console.log(1,"vector", vectorstoreUuidList)
+      setVectorstoreUuidList(postFilesResponse.vectorstore_uuid_list);
       handleClose();
     }
   }, [postFilesSuccess,postFilesResponse]);

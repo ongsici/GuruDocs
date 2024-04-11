@@ -6,8 +6,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-
 import AddIcon from "@mui/icons-material/Add";
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 
 import UploadDialog from "../UploadDialog";
 
@@ -28,7 +28,8 @@ export default function Layout({ model, setModel, pagesUuidList, setPagesUuidLis
         <AppBar position="fixed" sx={{ top: 0, width: "100%" }}>
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              GuruDocs
+              <DocumentScannerIcon sx={{ mr: 2 }} />
+              Welcome to GuruDocs!
             </Typography>
             <div>
               <Button

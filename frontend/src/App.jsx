@@ -12,8 +12,7 @@ function App() {
   const [vectorstoreUuidList, setVectorstoreUuidList] = useState([]);
   const [fileName, setFileName] = useState(null);
   const [model, setModel] = useState("llama2");
-  console.log(2, "pages", pagesUuidList)
-  console.log(2, "vector", vectorstoreUuidList)
+
   return (
     <div>
       <Routes>

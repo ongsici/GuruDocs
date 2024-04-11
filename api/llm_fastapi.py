@@ -67,8 +67,7 @@ def embed(item: FormDataInput):
         vectorstore_uuid = str(uuid.uuid4())
         vectorstore_dict[vectorstore_uuid] = vectorstore
         vectorstore_uuid_list.append(vectorstore_uuid)
-    print(f'pages uuid list {pages_uuid_list}')
-    print(f'vectorstore uuid list {vectorstore_uuid_list}')
+
     return {"pages_uuid_list": pages_uuid_list,
             "vectorstore_uuid_list": vectorstore_uuid_list}
 
