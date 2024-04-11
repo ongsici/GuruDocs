@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 from typing import List
 
-class FilePath(BaseModel):
-    file_path: str
+class FormDataInput(BaseModel):
+    model: str
+    files: List[str]
 
 class QueryInput(BaseModel):
     model_option: str
