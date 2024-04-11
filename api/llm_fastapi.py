@@ -3,7 +3,6 @@ from fastapi.responses import JSONResponse
 from api.api_data_models import FormDataInput, SummaryInput, QueryInput, newQueryInput
 import os
 import uuid
-import io
 from api.llm_utils import get_pypdf_text, get_document_chunks, get_vectorstore, get_conversation_chain, get_summary, conversational_rag_chain
 from fastapi.middleware.cors import CORSMiddleware
 import base64
@@ -60,8 +59,8 @@ def embed(item: FormDataInput):
         vectorstore_dict[vectorstore_uuid] = vectorstore
         vectorstore_uuid_list.append(vectorstore_uuid)
 
-    return {"pages_id": pages_uuid_list,
-            "vectorstore_id": vectorstore_uuid_list}
+    return {"pages_uuid_list": pages_uuid_list,
+            "vectorstore_uuid_list": vectorstore_uuid_list}
 
 @app.post("/query")
 def query(item: QueryInput):
@@ -89,12 +88,11 @@ def newQuery(item:newQueryInput):
 
 @app.post("/summary")
 def summary(item: SummaryInput):
-    
-    # Get summary
-    # print(f'type pages {type(item.pages)}')
-    # for item_dict in item.pages:
-    #     print(f'item dict type {type(item_dict)}')
-    #     print(item_dict)
-    summary = get_summary(pages_store[item.pages_id], item.model_option)
+    print(f'!!!!! {pages_store}')
+    summary_list = []
 
-    return {"summary": summary}
+    for item_page_id in item.pages_id:
+        summary = get_summary(pages_store[item_page_id], item.model_option)
+        summary_list.append(summary)
+
+    return {"summary": summary_list}

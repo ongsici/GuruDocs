@@ -73,6 +73,7 @@ def get_conversation_chain(vectorstore, model_option):
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
         retriever=vectorstore.as_retriever(),
+        verbose=True,
         memory=memory
     )
     return conversation_chain

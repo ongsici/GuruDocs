@@ -18,4 +18,4 @@ class newQueryInput(BaseModel):
 
 class SummaryInput(BaseModel):
     model_option: str
-    pages_id: str
+    pages_id: List[str]

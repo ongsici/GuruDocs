@@ -22,15 +22,7 @@ import { CircularProgress } from "@mui/material";
 
 const DEFAULT_MODEL_VALUE = "llama2";
 
-// const minioClient = new Minio.Client({
-//   endPoint: 'http://localhost',
-//   port: 9000,
-//   useSSL: false, // Set to true if using HTTPS
-//   accessKey: 'test',
-//   secretKey: 'test123123',
-// });
-
-export default function UploadDialog({ open, handleClose }) {
+export default function UploadDialog({ open, handleClose, model, setModel, pagesUuidList, setPagesUuidList, vectorstoreUuidList, setVectorstoreUuidList }) {
   const fileRef = useRef(null);
   const [files, setFiles] = useState(null);
   const handleFileChange = (event) => {
@@ -40,7 +32,6 @@ export default function UploadDialog({ open, handleClose }) {
     fileRef.current.click();
   };
 
-  const [model, setModel] = useState(DEFAULT_MODEL_VALUE);
   const handleModelChange = (event) => {
     setModel(event.target.value);
   };
@@ -49,6 +40,7 @@ export default function UploadDialog({ open, handleClose }) {
     success: postFilesSuccess,
     loading: postFilesLoading,
     error: postFilesError,
+    data: postFilesResponse,
     renderFetch: postFiles,
   } = useFetch(`${REACT_APP_BACKEND_URL}/embed`, "POST");
 
@@ -68,6 +60,7 @@ export default function UploadDialog({ open, handleClose }) {
           if (fileBase64StringArr.length === files.length) {
             postFiles({ model, files: fileBase64StringArr });
           }
+
         };
 
         reader.readAsBinaryString(file);
@@ -76,10 +69,15 @@ export default function UploadDialog({ open, handleClose }) {
   };
 
   useEffect(() => {
-    if (postFilesSuccess) {
+    // console.log(postFilesSuccess, postFilesResponse)
+    if (postFilesSuccess && postFilesResponse) {
+      setPagesUuidList(postFilesResponse.pages_uuid_list); 
+      setVectorstoreUuidList(postFilesResponse.vectorstore_uuid_list)
+      console.log(1, pagesUuidList)
+      console.log(1, vectorstoreUuidList)
       handleClose();
     }
-  }, [postFilesSuccess]);
+  }, [postFilesSuccess,postFilesResponse]);
 
   if (postFilesLoading) {
     return (
