@@ -22,7 +22,7 @@ import { CircularProgress } from "@mui/material";
 
 const DEFAULT_MODEL_VALUE = "llama2";
 
-export default function UploadDialog({ open, handleClose, model, setModel, pagesUuidList, setPagesUuidList, vectorstoreUuidList, setVectorstoreUuidList }) {
+export default function UploadDialog({ open, handleClose, model, setModel, pagesUuidList, setPagesUuidList, vectorstoreUuidList, setVectorstoreUuidList, fileName, setFileName }) {
   const fileRef = useRef(null);
   const [files, setFiles] = useState(null);
   const handleFileChange = (event) => {
@@ -35,6 +35,7 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
   const handleModelChange = (event) => {
     setModel(event.target.value);
   };
+
 
   const {
     success: postFilesSuccess,
@@ -52,6 +53,10 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
     if (files?.length > 0) {
       [...files].forEach((file) => {
         const reader = new FileReader();
+        const filename = file.name;
+        setFileName(filename)
+
+        console.log('Uploaded filename:', fileName);
 
         reader.onload = function (e) {
           const base64String = btoa(e.target.result);
@@ -73,8 +78,8 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
     if (postFilesSuccess && postFilesResponse) {
       setPagesUuidList(postFilesResponse.pages_uuid_list); 
       setVectorstoreUuidList(postFilesResponse.vectorstore_uuid_list)
-      console.log(1, pagesUuidList)
-      console.log(1, vectorstoreUuidList)
+      console.log(1,"pages", pagesUuidList)
+      console.log(1,"vector", vectorstoreUuidList)
       handleClose();
     }
   }, [postFilesSuccess,postFilesResponse]);
@@ -119,7 +124,7 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
           <input
             ref={fileRef}
             style={{ display: "none" }}
-            multiple
+            // multiple
             type="file"
             accept="application/msword, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             onChange={handleFileChange}

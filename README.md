@@ -39,7 +39,8 @@
 - Ollama (see download instructions [here](https://ollama.com/download))
 ```
 pip install -r requirements.txt
-ollama pull mistral llama2
+ollama pull llama2
+ollama pull mistral 
 ```
 ### Start Application
 

@@ -2,13 +2,14 @@
 import { useRef, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+// import { Card, CardContent, CircularProgress, Typography, Box } from '@material-ui/core';
 import { REACT_APP_BACKEND_URL } from "../../config";
 import { useFetch } from "../../hooks/useFetch";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Card, CardContent } from "@mui/material";
 
 
-export default function Summary({ model, setModel, pagesUuidList, setPagesUuidList }) {
-    const [summary, setSummary] = useState("");
+export default function Summary({ model, setModel, pagesUuidList, setPagesUuidList, fileName, setFileName }) {
+    const [summaries, setSummaries] = useState([]);
   
     const {
         // success: postFilesSuccess,
@@ -19,21 +20,20 @@ export default function Summary({ model, setModel, pagesUuidList, setPagesUuidLi
       } = useFetch(`${REACT_APP_BACKEND_URL}/summary`, "POST");
 
     useEffect(() => {
-      console.log(summary)
+      console.log(summaries)
       console.log(4, pagesUuidList)
-      if (!summary && pagesUuidList?.length > 0) {
+      if (pagesUuidList?.length > 0 && summaries.length === 0) {
         console.log('getsum')
         getSummary({ pages_id: pagesUuidList, model_option: model });
       }
-    }, [summary, pagesUuidList, model]);
+    }, [summaries, pagesUuidList, model]);
     
     useEffect(() => {
     if (postFilesResponse) {
-        setSummary(postFilesResponse.summary);
+        setSummaries(postFilesResponse.summary);
     }
     }, [postFilesResponse]);
 
-    // TODO: implement spinner when loading (see UploadDialog)
     if (postFilesLoading) {
         return (
             <Box m={5}>
@@ -41,11 +41,22 @@ export default function Summary({ model, setModel, pagesUuidList, setPagesUuidLi
             </Box>
         );
       }
-
+    
     return (
-      <Typography>
-        {summary}
-      </Typography>
+      <div>
+          {summaries.map((summary, index) => (
+              <Card key={index} style={{ marginBottom: '10px' }}>
+                  <CardContent>
+                      <Typography variant="h6" gutterBottom>
+                          {fileName}
+                      </Typography>
+                      <Typography variant="body1">
+                          {summary}
+                      </Typography>
+                  </CardContent>
+              </Card>
+          ))}
+      </div>
     );
   }
   

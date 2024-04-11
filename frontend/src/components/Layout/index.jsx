@@ -11,7 +11,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 import UploadDialog from "../UploadDialog";
 
-export default function Layout({ model, setModel, pagesUuidList, setPagesUuidList, vectorstoreUuidList, setVectorstoreUuidList }) {
+export default function Layout({ model, setModel, pagesUuidList, setPagesUuidList, vectorstoreUuidList, setVectorstoreUuidList, fileName, setFileName }) {
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
   const handleUpload = () => {
@@ -54,6 +54,8 @@ export default function Layout({ model, setModel, pagesUuidList, setPagesUuidLis
           setPagesUuidList={setPagesUuidList}
           vectorstoreUuidList={vectorstoreUuidList}
           setVectorstoreUuidList={setVectorstoreUuidList}
+          fileName={fileName}
+          setFileName={setFileName}
         />
       ) : null}
       <Outlet />

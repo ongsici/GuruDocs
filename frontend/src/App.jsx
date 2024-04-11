@@ -9,9 +9,11 @@ const ROUTES = [{ path: "/", element: <Home /> }];
 
 function App() {
   const [pagesUuidList, setPagesUuidList] = useState([]);
-  console.log(2, pagesUuidList)
   const [vectorstoreUuidList, setVectorstoreUuidList] = useState([]);
+  const [fileName, setFileName] = useState(null);
   const [model, setModel] = useState("llama2");
+  console.log(2, "pages", pagesUuidList)
+  console.log(2, "vector", vectorstoreUuidList)
   return (
     <div>
       <Routes>
@@ -21,20 +23,18 @@ function App() {
                                   pagesUuidList={pagesUuidList}
                                   setPagesUuidList={setPagesUuidList}
                                   vectorstoreUuidList={vectorstoreUuidList}
-                                  setVectorstoreUuidList={setVectorstoreUuidList} />}>
-          <Route exact path="/" Component={(props) => <Home {...props} model={model} setModel={setModel} pagesUuidList={pagesUuidList} setPagesUuidList={setPagesUuidList} vectorstoreUuidList={vectorstoreUuidList} setVectorstoreUuidList={setVectorstoreUuidList} />} />
-          {/* {ROUTES.map(({ path, element }) => (
-            <Route 
-            key={path}
-            path={path}
-            element={element}
-            model={model}
-            setModel={setModel}
-            pagesUuidList={pagesUuidList}
-            setPagesUuidList={setPagesUuidList}
-            vectorstoreUuidList={vectorstoreUuidList}
-            setVectorstoreUuidList={setVectorstoreUuidList} />
-          ))} */}
+                                  setVectorstoreUuidList={setVectorstoreUuidList}
+                                  fileName = {fileName}
+                                  setFileName={setFileName} />}>
+          <Route exact path="/" Component={(props) => <Home {...props} 
+                                                      model={model} 
+                                                      setModel={setModel} 
+                                                      pagesUuidList={pagesUuidList} 
+                                                      setPagesUuidList={setPagesUuidList} 
+                                                      vectorstoreUuidList={vectorstoreUuidList} 
+                                                      setVectorstoreUuidList={setVectorstoreUuidList}
+                                                      fileName = {fileName}
+                                                      setFileName={setFileName} />} />
         </Route>
       </Routes>
     </div>
