@@ -37,20 +37,16 @@ def embed(item: FilePath):
             "vectorstore_id": vectorstore_uuid}
 
 @app.post("/query")
-# async 
 def query(item: QueryInput):
-
-    conversation_chain = get_conversation_chain(vectorstore_dict[item.vectorstore_id], item.model_option)
-    # conversation_chain_store["conversation_chain"] = conversation_chain
+    conversation_chain, context = get_conversation_chain(vectorstore_dict[item.vectorstore_id], item.model_option, item.user_query)
     response = conversation_chain({'question': item.user_query})
-
-    return {"response": response}
+    return {"response": response, "context": context}
 
 @app.post("/newquery")
 #async
 def newQuery(item:newQueryInput):
 
-    conversation_rag = conversational_rag_chain(vectorstore_dict[item.vectorstore_id], item.model_option)
+    conversation_rag, context = conversational_rag_chain(vectorstore_dict[item.vectorstore_id], item.model_option,item.user_query)
     response = conversation_rag.invoke(
         {"input":item.user_query},
         config={
@@ -59,7 +55,7 @@ def newQuery(item:newQueryInput):
     )["answer"]
     # response = conversation_rag({'question': item.user_query})
 
-    return {"response": response}
+    return {"response": response,  "context": context}
     
 
 @app.post("/summary")
