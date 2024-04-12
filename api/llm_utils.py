@@ -19,6 +19,8 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 import os
 import shutil
 import pandas as pd
+import re
+from api.metrics import faithfulness, generate_questions, answer_relevancy, context_precision, context_recall
 
 
 def get_pypdf_text(file_paths):
@@ -79,6 +81,8 @@ def get_conversation_chain(vectorstore, model_option,query):
         memory=memory
     )
     context = retriever.get_relevant_documents(query)
+    response = conversation_chain({'question': query})['answer']
+    eval(query,response,context)
     return conversation_chain, context
 
 def get_summary(pages, model_option):
@@ -136,6 +140,7 @@ def conversational_rag_chain(vectorstore,model_option,query):
 
     retriever = vectorstore.as_retriever()
     context = retriever.get_relevant_documents(query)
+    
     contextualize_q_system_prompt = """Given a chat history and the latest user question \
     which might reference context in the chat history, formulate a standalone question \
     which can be understood without the chat history. Do NOT answer the question, \
@@ -186,3 +191,25 @@ def conversational_rag_chain(vectorstore,model_option,query):
         output_messages_key="answer",
     )
     return conversational_rag_chain, context
+
+def split_into_sentences(text):
+    # Remove all newline characters and extra whitespace
+    text = text.replace('\n', ' ').strip()
+
+    # Define the regular expression pattern for sentence segmentation
+    sentence_endings = r'[.!?]'
+
+    # Split the text into sentences using the regular expression pattern
+    sentences = re.split(sentence_endings, text)
+
+    # Clean up the sentences (remove extra whitespace and '\n')
+    sentences = [re.sub(r'\s+', ' ', sentence.strip()) for sentence in sentences if sentence.strip()]
+
+    return sentences
+
+def eval(query,answer,context):
+    # Extracting page_content and appending to a new list
+    page_contents = [doc.page_content for doc in context]
+    print(page_contents)
+    print(query)
+    print(answer)
