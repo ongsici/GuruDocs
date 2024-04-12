@@ -20,10 +20,7 @@ export default function Summary({ model, setModel, pagesUuidList, setPagesUuidLi
       } = useFetch(`${REACT_APP_BACKEND_URL}/summary`, "POST");
 
     useEffect(() => {
-      console.log(summaries)
-      console.log(4, pagesUuidList)
       if (pagesUuidList?.length > 0 && summaries.length === 0) {
-        console.log('getsum')
         getSummary({ pages_id: pagesUuidList, model_option: model });
       }
     }, [summaries, pagesUuidList, model]);

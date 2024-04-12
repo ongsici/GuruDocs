@@ -5,6 +5,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { useParams } from 'react-router';
 
 import Summary from "../../components/Summary";
+import ChatBot from "../../components/ChatBot"
 
 
 export default function Home({ model, setModel, pagesUuidList, setPagesUuidList, vectorstoreUuidList, setVectorstoreUuidList, fileName, setFileName}) {
@@ -31,7 +32,9 @@ export default function Home({ model, setModel, pagesUuidList, setPagesUuidList,
             <ChatIcon sx={{ mr: 1}} />
             Chat with your documents
           </Typography>
-          {/* Chat content */}
+            <Grid container justifyContent="center" item xs={12}>
+              <ChatBot />
+            </Grid>
         </Grid>
       </Grid>
     </Grid>
