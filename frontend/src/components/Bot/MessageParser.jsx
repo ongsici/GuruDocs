@@ -1,11 +1,14 @@
 import React from 'react';
 
-export default function MessageParser({ children, actions }) {
+export default function MessageParser({ children, actions, vectorstoreUuidList, setVectorstoreUuidList }) {
     const parse = (message) => {
       if (message.includes('hello')) {
         actions.handleHello();
+      } else if (!vectorstoreUuidList || vectorstoreUuidList.length === 0){
+        actions.handleNotReady();
+      } else {
+        actions.sendLLMQuery(message);
       }
-
     };
   
     return (

@@ -9,6 +9,8 @@ import ChatBot from "../../components/ChatBot"
 
 
 export default function Home({ model, setModel, pagesUuidList, setPagesUuidList, vectorstoreUuidList, setVectorstoreUuidList, fileName, setFileName}) {
+  console.log("model", model)
+  console.log("vector", vectorstoreUuidList)
   return (
     <Grid container justifyContent="center" my={10} rowGap={3}>
       <Grid item xs={12}>
@@ -33,7 +35,11 @@ export default function Home({ model, setModel, pagesUuidList, setPagesUuidList,
             Chat with your documents
           </Typography>
             <Grid container justifyContent="center" item xs={12}>
-              <ChatBot />
+              <ChatBot 
+              model={model} 
+              setModel={setModel}
+              vectorstoreUuidList={vectorstoreUuidList}
+              setVectorstoreUuidList={setVectorstoreUuidList} />
             </Grid>
         </Grid>
       </Grid>

@@ -1,7 +1,20 @@
 import React from 'react';
+import { useState, useEffect } from "react";
+import { useFetch } from "../../hooks/useFetch";
+import { REACT_APP_BACKEND_URL } from "../../config";
 
 
-export default function ActionProvider({ createChatBotMessage, setState, children }) {
+export default function ActionProvider({ createChatBotMessage, setState, children, model, setModel, vectorstoreUuidList, setVectorstoreUuidList }) {
+  const [LLMQueryReply, setLLMQueryReply] = useState("")
+  const [userQuery, setUserQuery] = useState("")
+
+  const {
+    loading: getResponseLoading,
+    error: getResponseError,
+    data: postFilesResponse,
+    renderFetch: sendQuery,
+  } = useFetch(`${REACT_APP_BACKEND_URL}/query`, "POST");
+  
   const handleHello = () => {
     const botMessage = createChatBotMessage('Hello. Nice to meet you.');
 
@@ -10,6 +23,39 @@ export default function ActionProvider({ createChatBotMessage, setState, childre
       messages: [...prev.messages, botMessage],
     }));
   };
+
+  const handleNotReady = () => {
+    const botMessage = createChatBotMessage('Please upload a document or wait for the document processing to be completed.');
+
+    setState((prev) => ({
+      ...prev,
+      messages: [...prev.messages, botMessage],
+    }));
+  };
+  
+  const sendLLMQuery = (message) => {
+    if (message && vectorstoreUuidList && vectorstoreUuidList.length > 0) {
+      console.log("sending API", message, vectorstoreUuidList)
+      sendQuery({ model_option: model,
+                  vectorstore_id: vectorstoreUuidList[0],
+                  user_query: message });
+    }
+    const botMessage = createChatBotMessage("Sending to LLM...");
+        setState((prev) => ({
+          ...prev,
+          messages: [...prev.messages, botMessage],
+    }));      
+  };
+
+  useEffect(() => {
+    if (postFilesResponse) {
+      const botMessage = createChatBotMessage(postFilesResponse.response.answer);
+        setState((prev) => ({
+          ...prev,
+          messages: [...prev.messages, botMessage],
+    }));    
+    }
+  }, [postFilesResponse]);
  
   return (
     <div>
@@ -17,6 +63,8 @@ export default function ActionProvider({ createChatBotMessage, setState, childre
         return React.cloneElement(child, {
           actions: {
             handleHello,
+            handleNotReady,
+            sendLLMQuery
           },
         });
       })}

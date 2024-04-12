@@ -47,6 +47,7 @@
     display: flex;
     margin: 15px 0;
     justify-content: flex-start;
+    width: auto;
   }
   
   .react-chatbot-kit-chat-bot-avatar-container {
@@ -81,7 +82,7 @@
     color: #fff;
     font-weight: medium;
     position: relative;
-    width: auto !important;
+    /* width: auto !important; */
     margin-left: auto;
     text-align: left;
   }
@@ -136,7 +137,7 @@
   
   .react-chatbot-kit-chat-container {
     position: relative;
-    width: 100% !important;
+    width: 750px;
   }
   
   .react-chatbot-kit-chat-inner-container {
