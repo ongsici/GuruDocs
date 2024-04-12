@@ -5,7 +5,7 @@ from api.api_data_models import FilePath, SummaryInput, QueryInput, newQueryInpu
 import uuid
 
 # Your existing code for functions
-from api.llm_utils import get_pypdf_text, get_document_chunks, get_vectorstore, get_conversation_chain, get_summary, conversational_rag_chain
+from api.llm_utils import get_pypdf_text, get_document_chunks, get_vectorstore, get_conversation_chain, get_summary, conversational_rag_chain, eval
 
 app = FastAPI()
 vectorstore_dict = {}
@@ -40,22 +40,19 @@ def embed(item: FilePath):
 def query(item: QueryInput):
     conversation_chain, context = get_conversation_chain(vectorstore_dict[item.vectorstore_id], item.model_option, item.user_query)
     response = conversation_chain({'question': item.user_query})
-    return {"response": response, "context": context}
+    answer = response['answer']
+    faithfulness, Ans_Relevancy = eval(item.user_query,answer,context,item.model_option)
+    return {"response": response,  "context": context, "Faithfulness": faithfulness, "Answer Relevancy Score": Ans_Relevancy}
+    
 
 @app.post("/newquery")
 #async
 def newQuery(item:newQueryInput):
 
     conversation_rag, context = conversational_rag_chain(vectorstore_dict[item.vectorstore_id], item.model_option,item.user_query)
-    response = conversation_rag.invoke(
-        {"input":item.user_query},
-        config={
-            "configurable":{"session_id":item.session_id}
-        },
-    )["answer"]
-    # response = conversation_rag({'question': item.user_query})
-
-    return {"response": response,  "context": context}
+    response = conversation_rag.invoke({"input":item.user_query},config={"configurable":{"session_id":item.session_id}},)["answer"]
+    faithfulness, Ans_Relevancy = eval(item.user_query,response,context,item.model_option)
+    return {"response": response,  "context": context, "Faithfulness": faithfulness, "Answer Relevancy Score": Ans_Relevancy}
     
 
 @app.post("/summary")

@@ -24,12 +24,14 @@ def faithfulness(response, contexts):
     
     # Calculate faithfulness score
     faithfulness_score = len(valid_statements) / len(response_sentences)
+    if faithfulness_score >= 1.0:
+        faithfulness_score = 1.0
     print("Valid Statements:", valid_statements)
     print("Faithfulness Score:", faithfulness_score)
     return faithfulness_score
 
 # Function to generate hypothetical questions from the responses. 
-def generate_questions(response, model_option="mistral"):
+def generate_questions(response, model_option):
     
     # Define the prompt input
     prompt = f" generate possible questions based solely on this response {response}"
@@ -55,7 +57,7 @@ def answer_relevancy(query, generated_QN):
     print(f"Listing all the similarity_scores: {similarity_scores}")
 
     # Compute the average similarity score for Hypo-generated questions
-    avg_similarity_score = np.mean(similarity_scores)
+    avg_similarity_score = np.mean(similarity_scores.tolist())
 
     # Print the average similarity scores
     print("Answer Relevancy Score for Hypothetical-generated Questions:", avg_similarity_score)

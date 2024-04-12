@@ -67,7 +67,7 @@ def get_vectorstore(text_chunks):
     return vectorstore
 
 
-def get_conversation_chain(vectorstore, model_option,query):
+def get_conversation_chain(vectorstore, model_option, query):
     llm = ChatOllama(model=model_option, temperature=0)
 
     memory = ConversationBufferMemory(
@@ -81,8 +81,6 @@ def get_conversation_chain(vectorstore, model_option,query):
         memory=memory
     )
     context = retriever.get_relevant_documents(query)
-    response = conversation_chain({'question': query})['answer']
-    eval(query,response,context)
     return conversation_chain, context
 
 def get_summary(pages, model_option):
@@ -193,23 +191,20 @@ def conversational_rag_chain(vectorstore,model_option,query):
     return conversational_rag_chain, context
 
 def split_into_sentences(text):
-    # Remove all newline characters and extra whitespace
-    text = text.replace('\n', ' ').strip()
-
-    # Define the regular expression pattern for sentence segmentation
-    sentence_endings = r'[.!?]'
-
-    # Split the text into sentences using the regular expression pattern
-    sentences = re.split(sentence_endings, text)
-
-    # Clean up the sentences (remove extra whitespace and '\n')
-    sentences = [re.sub(r'\s+', ' ', sentence.strip()) for sentence in sentences if sentence.strip()]
-
+    sentences = []
+    for element in text:
+        element = element.replace('\n', ' ').strip()
+        sentence_endings = r'[.!?]'
+        element_sentences = re.split(sentence_endings, element)
+        element_sentences = [re.sub(r'\s+', ' ', sentence.strip()) for sentence in element_sentences if sentence.strip()]
+        sentences.extend(element_sentences)
     return sentences
 
-def eval(query,answer,context):
-    # Extracting page_content and appending to a new list
+def eval(query,answer,context,model_option):
     page_contents = [doc.page_content for doc in context]
-    print(page_contents)
-    print(query)
-    print(answer)
+    output = split_into_sentences(page_contents)
+    score_faithfulness = faithfulness(answer,output)
+
+    predicted_Qn = generate_questions(answer,model_option)
+    score_Ans_Relevancy = answer_relevancy(query,predicted_Qn)
+    return score_faithfulness, score_Ans_Relevancy
