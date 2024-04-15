@@ -2,12 +2,10 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import { useFetch } from "../../hooks/useFetch";
 import { REACT_APP_BACKEND_URL } from "../../config";
-
+import { CircularProgress } from "@mui/material";
+import Box from "@mui/material/Box";
 
 export default function ActionProvider({ createChatBotMessage, setState, children, model, setModel, vectorstoreUuidList, setVectorstoreUuidList }) {
-  const [LLMQueryReply, setLLMQueryReply] = useState("")
-  const [userQuery, setUserQuery] = useState("")
-
   const {
     loading: getResponseLoading,
     error: getResponseError,
@@ -40,7 +38,7 @@ export default function ActionProvider({ createChatBotMessage, setState, childre
                   vectorstore_id: vectorstoreUuidList[0],
                   user_query: message });
     }
-    const botMessage = createChatBotMessage("Sending to LLM...");
+    const botMessage = createChatBotMessage("Sending query, please wait...");
         setState((prev) => ({
           ...prev,
           messages: [...prev.messages, botMessage],
@@ -54,8 +52,22 @@ export default function ActionProvider({ createChatBotMessage, setState, childre
           ...prev,
           messages: [...prev.messages, botMessage],
     }));    
+    } else if (getResponseError) {
+      const botMessage = createChatBotMessage("Sorry there was an error in getting a response. Please try again.");
+        setState((prev) => ({
+          ...prev,
+          messages: [...prev.messages, botMessage],
+    }));  
     }
-  }, [postFilesResponse]);
+  }, [postFilesResponse, getResponseError]);
+
+  // if (getResponseLoading) {
+  //   return (
+  //     <Box m={5}>
+  //       <CircularProgress />
+  //     </Box>
+  // );
+  // }
  
   return (
     <div>
