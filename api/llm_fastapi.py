@@ -34,7 +34,6 @@ def embed(item: FormDataInput):
     vectorstore_uuid_list = []
     # Get text from PDF
     tmp_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'tmp'))
-    print(tmp_dir)
     os.makedirs(tmp_dir, exist_ok = True)
 
     persist_directory = 'docs/chroma/'
@@ -46,7 +45,6 @@ def embed(item: FormDataInput):
         pages = None
         vectorstore = None
         chunks = None
-        print(len(file_data))
         base64string = base64.b64decode(file_data)
 
         file_path = os.path.join(tmp_dir, f'file_{index}.pdf')
@@ -68,6 +66,11 @@ def embed(item: FormDataInput):
         vectorstore_dict[vectorstore_uuid] = vectorstore
         vectorstore_uuid_list.append(vectorstore_uuid)
 
+    # clean up of tmp directory as PDF documents are not needed anymore
+    if os.path.exists(tmp_dir):
+        shutil.rmtree(tmp_dir)
+
+    print(f'vector {vectorstore_uuid_list}')
     return {"pages_uuid_list": pages_uuid_list,
             "vectorstore_uuid_list": vectorstore_uuid_list}
 
@@ -75,7 +78,6 @@ def embed(item: FormDataInput):
 def query(item: QueryInput):
 
     conversation_chain = get_conversation_chain(vectorstore_dict[item.vectorstore_id], item.model_option)
-    # conversation_chain_store["conversation_chain"] = conversation_chain
     response = conversation_chain({'question': item.user_query})
 
     return {"response": response}
