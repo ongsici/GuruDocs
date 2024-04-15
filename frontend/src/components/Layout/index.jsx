@@ -45,20 +45,18 @@ export default function Layout({ model, setModel, pagesUuidList, setPagesUuidLis
           </Toolbar>
         </AppBar>
       </Box>
-      {isUploadDialogOpen ? (
-        <UploadDialog
-          open={isUploadDialogOpen}
-          handleClose={handleDialogClose}
-          model={model}
-          setModel={setModel}
-          pagesUuidList={pagesUuidList} 
-          setPagesUuidList={setPagesUuidList}
-          vectorstoreUuidList={vectorstoreUuidList}
-          setVectorstoreUuidList={setVectorstoreUuidList}
-          fileName={fileName}
-          setFileName={setFileName}
-        />
-      ) : null}
+      <UploadDialog
+        open={isUploadDialogOpen}
+        handleClose={handleDialogClose}
+        model={model}
+        setModel={setModel}
+        pagesUuidList={pagesUuidList} 
+        setPagesUuidList={setPagesUuidList}
+        vectorstoreUuidList={vectorstoreUuidList}
+        setVectorstoreUuidList={setVectorstoreUuidList}
+        fileName={fileName}
+        setFileName={setFileName}
+      />
       <Outlet />
     </>
   );
