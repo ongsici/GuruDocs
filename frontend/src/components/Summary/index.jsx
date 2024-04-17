@@ -32,9 +32,11 @@ export default function Summary({ model, setModel, pagesUuidList, setPagesUuidLi
     }, [postFilesResponse]);
 
     if (postFilesLoading) {
+      const sumDescription = "Generating document summary..."
         return (
-            <Box m={5}>
+            <Box m={10} textAlign="center">
               <CircularProgress />
+              <Typography variant="body1" mt={2}>{sumDescription}</Typography>
             </Box>
         );
       }

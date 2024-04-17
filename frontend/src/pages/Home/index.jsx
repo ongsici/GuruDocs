@@ -2,8 +2,6 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import ChatIcon from '@mui/icons-material/Chat';
-import { useParams } from 'react-router';
-
 import Summary from "../../components/Summary";
 import ChatBot from "../../components/ChatBot"
 

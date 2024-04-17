@@ -13,6 +13,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import Typography from "@mui/material/Typography";
 
 import { REACT_APP_BACKEND_URL } from "../../config";
 import { useFetch } from "../../hooks/useFetch";
@@ -78,6 +79,7 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
   }, [postFilesSuccess,postFilesResponse]);
 
   if (postFilesLoading) {
+    const embedDescription = "Embedding your documents..."
     return (
       <Dialog
         open={open}
@@ -87,8 +89,9 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
           onSubmit: handleSubmit,
         }}
       >
-        <Box m={20}>
+        <Box m={20} textAlign="center">
           <CircularProgress />
+          <Typography variant="body1" mt={2}>{embedDescription}</Typography>
         </Box>
       </Dialog>
     );
