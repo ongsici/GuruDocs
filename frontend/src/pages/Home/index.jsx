@@ -17,13 +17,15 @@ export default function Home({ model, setModel, pagesUuidList, setPagesUuidList,
             <SummarizeIcon sx={{ mr: 1 }} />
             Summary
           </Typography>
-          <Summary 
-          model={model} 
-          setModel={setModel} 
-          pagesUuidList={pagesUuidList} 
-          setPagesUuidList={setPagesUuidList}
-          fileName={fileName}
-          setFileName={setFileName} />
+            <Grid container justifyContent="center" item xs={12}>
+              <Summary 
+                model={model} 
+                setModel={setModel} 
+                pagesUuidList={pagesUuidList} 
+                setPagesUuidList={setPagesUuidList}
+                fileName={fileName}
+                setFileName={setFileName} />
+            </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12}>
