@@ -1,3 +1,4 @@
+
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.ollama import OllamaEmbeddings
@@ -18,6 +19,8 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 import os
 import shutil
 import pandas as pd
+import re
+from api.metrics import faithfulness, generate_questions, answer_relevancy, context_precision, context_recall
 
 
 def get_pypdf_text(file_path):
@@ -30,16 +33,17 @@ def get_pypdf_text(file_path):
 
 def get_document_chunks(pages):
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size = 1500,
+        chunk_size = 5000,
         chunk_overlap = 150
     )
     chunks = text_splitter.split_documents(pages)
     print(f'Completed splitting chunks')
+    # print(chunks)
     return chunks
 
 def get_embedding():
     model_name = "BAAI/bge-small-en"
-    model_kwargs = {"device": "cpu"}
+    model_kwargs = {"device": "cuda"}
     encode_kwargs = {"normalize_embeddings": True}
     hf_embd = HuggingFaceBgeEmbeddings(model_name=model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs)
     return hf_embd
@@ -58,19 +62,21 @@ def get_vectorstore(text_chunks, persist_directory):
     return vectorstore
 
 
-def get_conversation_chain(vectorstore, model_option):
+def get_conversation_chain(vectorstore, model_option, query):
     llm = ChatOllama(model=model_option, temperature=0)
 
     memory = ConversationBufferMemory(
         memory_key='chat_history', 
         return_messages=True
         )
+    retriever = vectorstore.as_retriever(search_type='mmr')
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
-        retriever=vectorstore.as_retriever(),
+        retriever= retriever,
         memory=memory
     )
-    return conversation_chain
+    context = retriever.get_relevant_documents(query)
+    return conversation_chain, context
 
 def get_summary(pages, model_option):
     final_mp_data = []
@@ -122,10 +128,12 @@ def get_summary(pages, model_option):
     summary = pdf_mp_summary["concise_summary"].iloc[0]
     return summary
 
-def conversational_rag_chain(vectorstore,model_option):
+def conversational_rag_chain(vectorstore,model_option,query):
     llm = ChatOllama(model=model_option, temperature=0)
 
     retriever = vectorstore.as_retriever()
+    context = retriever.get_relevant_documents(query)
+    
     contextualize_q_system_prompt = """Given a chat history and the latest user question \
     which might reference context in the chat history, formulate a standalone question \
     which can be understood without the chat history. Do NOT answer the question, \
@@ -175,4 +183,23 @@ def conversational_rag_chain(vectorstore,model_option):
         history_messages_key="chat_history",
         output_messages_key="answer",
     )
-    return conversational_rag_chain
+    return conversational_rag_chain, context
+
+def split_into_sentences(text):
+    sentences = []
+    for element in text:
+        element = element.replace('\n', ' ').strip()
+        sentence_endings = r'[.!?]'
+        element_sentences = re.split(sentence_endings, element)
+        element_sentences = [re.sub(r'\s+', ' ', sentence.strip()) for sentence in element_sentences if sentence.strip()]
+        sentences.extend(element_sentences)
+    return sentences
+
+def eval(query,answer,context,model_option):
+    page_contents = [doc.page_content for doc in context]
+    output = split_into_sentences(page_contents)
+    score_faithfulness = faithfulness(answer,output)
+
+    predicted_Qn = generate_questions(answer,model_option)
+    score_Ans_Relevancy = answer_relevancy(query,predicted_Qn)
+    return score_faithfulness, score_Ans_Relevancy

@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from api.api_data_models import FormDataInput, SummaryInput, QueryInput, newQueryInput
 import os
 import uuid
-from api.llm_utils import get_pypdf_text, get_document_chunks, get_vectorstore, get_conversation_chain, get_summary, conversational_rag_chain
+from api.llm_utils import get_pypdf_text, get_document_chunks, get_vectorstore, get_conversation_chain, get_summary, conversational_rag_chain, eval
 from fastapi.middleware.cors import CORSMiddleware
 import base64
 import shutil
@@ -77,24 +77,21 @@ def embed(item: FormDataInput):
 @app.post("/query")
 def query(item: QueryInput):
 
-    conversation_chain = get_conversation_chain(vectorstore_dict[item.vectorstore_id], item.model_option)
-    response = conversation_chain({'question': item.user_query})
+    conversation_chain, context = get_conversation_chain(vectorstore_dict[item.vectorstore_id], item.model_option, item.user_query)
 
-    return {"response": response}
+    response = conversation_chain({'question': item.user_query})
+    answer = response['answer']
+    faithfulness, Ans_Relevancy = eval(item.user_query,answer,context,item.model_option)
+    return {"response": response,  "context": context, "Faithfulness": faithfulness, "Answer Relevancy Score": Ans_Relevancy}
+    
 
 @app.post("/newquery")
 def newQuery(item:newQueryInput):
 
-    conversation_rag = conversational_rag_chain(vectorstore_dict[item.vectorstore_id], item.model_option)
-    response = conversation_rag.invoke(
-        {"input":item.user_query},
-        config={
-            "configurable":{"session_id":item.session_id}
-        },
-    )["answer"]
-    # response = conversation_rag({'question': item.user_query})
-
-    return {"response": response}
+    conversation_rag, context = conversational_rag_chain(vectorstore_dict[item.vectorstore_id], item.model_option,item.user_query)
+    response = conversation_rag.invoke({"input":item.user_query},config={"configurable":{"session_id":item.session_id}},)["answer"]
+    faithfulness, Ans_Relevancy = eval(item.user_query,response,context,item.model_option)
+    return {"response": response,  "context": context, "Faithfulness": faithfulness, "Answer Relevancy Score": Ans_Relevancy}
     
 
 @app.post("/summary")
