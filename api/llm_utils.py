@@ -20,12 +20,11 @@ import shutil
 import pandas as pd
 
 
-def get_pypdf_text(file_paths):
-    for file_path in file_paths:
-        loader = PyPDFLoader(os.path.abspath(file_path))
-        pages = loader.load()
+def get_pypdf_text(file_path):
 
-    # TODO: need to fix this, only returns 1 file
+    loader = PyPDFLoader(os.path.abspath(file_path))
+    pages = loader.load()
+
     return pages
 
 
@@ -45,13 +44,9 @@ def get_embedding():
     hf_embd = HuggingFaceBgeEmbeddings(model_name=model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs)
     return hf_embd
 
-def get_vectorstore(text_chunks):
+def get_vectorstore(text_chunks, persist_directory):
     embeddings = get_embedding()
-    persist_directory = 'docs/chroma/'
-    # cleanup
-    if os.path.exists(persist_directory):
-        shutil.rmtree(persist_directory)
-    os.makedirs(persist_directory, exist_ok=True)
+    
     print(f'Starting storing chunks as embeddings into vector DB')
     
     vectorstore = Chroma.from_documents(
