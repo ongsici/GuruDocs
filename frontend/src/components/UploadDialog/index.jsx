@@ -18,12 +18,14 @@ import Typography from "@mui/material/Typography";
 import { REACT_APP_BACKEND_URL } from "../../config";
 import { useFetch } from "../../hooks/useFetch";
 import { CircularProgress } from "@mui/material";
+import Toast from "../Toast";
 
 const DEFAULT_MODEL_VALUE = "llama2";
 
 export default function UploadDialog({ open, handleClose, model, setModel, pagesUuidList, setPagesUuidList, vectorstoreUuidList, setVectorstoreUuidList, fileName, setFileName }) {
   const fileRef = useRef(null);
   const [files, setFiles] = useState(null);
+  const [showToast, setShowToast] = useState(false)
   const handleFileChange = (event) => {
     setFiles(event.target.files);
   };
@@ -70,11 +72,17 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
     }
   };
 
+  const handleSuccessToast = () => {
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
   useEffect(() => {
     if (postFilesSuccess && postFilesResponse) {
       setPagesUuidList(postFilesResponse.pages_uuid_list); 
       setVectorstoreUuidList(postFilesResponse.vectorstore_uuid_list);
       handleClose();
+      handleSuccessToast();
     }
   }, [postFilesSuccess,postFilesResponse]);
 
@@ -95,6 +103,13 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
         </Box>
       </Dialog>
     );
+  }
+
+  if (showToast) {
+    console.log("TOAST MESSAGE")
+    return (
+      <Toast message="Your document has been successfully embedded!" onClose={() => setShowToast(false)} />
+    )
   }
 
   return (
