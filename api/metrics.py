@@ -1,6 +1,8 @@
 from sentence_transformers import SentenceTransformer, util
 import numpy as np
+import nltk
 from nltk.tokenize import sent_tokenize
+nltk.download('punkt')
 import subprocess
 
 # Load the pre-trained Sentence Transformer model

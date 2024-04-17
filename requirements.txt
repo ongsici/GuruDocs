@@ -4,3 +4,4 @@ pypdf
 chromadb==0.4.14
 python-multipart
 sentence_transformers
+nltk

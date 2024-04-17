@@ -81,8 +81,8 @@ def query(item: QueryInput):
 
     response = conversation_chain({'question': item.user_query})
     answer = response['answer']
-    faithfulness, Ans_Relevancy = eval(item.user_query,answer,context,item.model_option)
-    return {"response": response,  "context": context, "Faithfulness": faithfulness, "Answer Relevancy Score": Ans_Relevancy}
+    # faithfulness, Ans_Relevancy = eval(item.user_query,answer,context,item.model_option)
+    return {"response": response}#,  "context": context, "Faithfulness": faithfulness, "Answer Relevancy Score": Ans_Relevancy}
     
 
 @app.post("/newquery")
