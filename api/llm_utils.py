@@ -17,29 +17,50 @@ from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
 
 import os
-import shutil
 import pandas as pd
 import re
-from api.metrics import faithfulness, generate_questions, answer_relevancy, context_precision, context_recall
+import nltk
+from api.metrics import faithfulness, generate_questions, answer_relevancy
 
+class Document:
+    def __init__(self, page_content, metadata):
+        self.page_content = page_content
+        self.metadata = metadata
 
 def get_pypdf_text(file_path):
-
     loader = PyPDFLoader(os.path.abspath(file_path))
     pages = loader.load()
-
     return pages
 
+def clean_chunk_text(text):
+    # Define translation table to remove specified characters
+    translation_table = str.maketrans('', '', '\n$#@^*()<>{}\\|-_…/')
+    # Remove specified characters from text
+    cleaned_text = text.translate(translation_table)
+    return cleaned_text
 
-def get_document_chunks(pages):
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size = 5000,
-        chunk_overlap = 150
-    )
-    chunks = text_splitter.split_documents(pages)
+def get_document_chunks(file_path):
+    all_chunks = []
+    
+    loader = PyPDFLoader(os.path.abspath(file_path))
+    pages = loader.load()
+    # Iterate over pages
+    for page_num, page in enumerate(pages, start=1):
+        # Get the text content of the page
+        page_content = page.page_content
+        # Split page content into sentences
+        sentences = nltk.sent_tokenize(page_content)
+        # Append each sentence as a chunk along with metadata
+        for i, sentence in enumerate(sentences):
+            metadata = {'source': page.metadata['source'], 'page': page_num}
+            chunk = {'content': sentence.strip(), 'metadata': metadata}
+            # Clean the text of the chunk
+            chunk['content'] = clean_chunk_text(chunk['content'])
+            # remove cleaned sentence if less than or equal to 10
+            if len(chunk['content']) > 10:
+                all_chunks.append(chunk)
     print(f'Completed splitting chunks')
-    # print(chunks)
-    return chunks
+    return all_chunks
 
 def get_embedding():
     model_name = "BAAI/bge-small-en"
@@ -53,8 +74,11 @@ def get_vectorstore(text_chunks, persist_directory):
     
     print(f'Starting storing chunks as embeddings into vector DB')
     
+    # Convert text_chunks into Document objects
+    documents = [Document(page_content=chunk['content'], metadata=chunk['metadata']) for chunk in text_chunks]
+    
     vectorstore = Chroma.from_documents(
-        documents=text_chunks,
+        documents=documents,
         embedding=embeddings,
         persist_directory=persist_directory
     )

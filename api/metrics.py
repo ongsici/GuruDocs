@@ -4,6 +4,7 @@ import nltk
 from nltk.tokenize import sent_tokenize
 nltk.download('punkt')
 import subprocess
+import pandas as pd
 
 # Load the pre-trained Sentence Transformer model
 model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
@@ -21,14 +22,13 @@ def faithfulness(response, contexts):
             # Calculate similarity score with each context sentence
             similarity_scores = util.cos_sim(model.encode(sentence), model.encode(context))
             if similarity_scores>= 0.8:
-                print(similarity_scores,context)
+                # print(similarity_scores,context)
                 valid_statements.append(sentence)
     
     # Calculate faithfulness score
     faithfulness_score = len(valid_statements) / len(response_sentences)
     if faithfulness_score >= 1.0:
         faithfulness_score = 1.0
-    print("Valid Statements:", valid_statements)
     print("Faithfulness Score:", faithfulness_score)
     return faithfulness_score
 
@@ -56,57 +56,64 @@ def answer_relevancy(query, generated_QN):
 
     # Compute cosine similarity between the query and each Hypo-generated question
     similarity_scores = util.cos_sim([query_embedding], generated_QN_embeddings)[0]
-    print(f"Listing all the similarity_scores: {similarity_scores}")
+    # print(f"Listing all the similarity_scores: {similarity_scores}")
 
     # Compute the average similarity score for Hypo-generated questions
     avg_similarity_score = np.mean(similarity_scores.tolist())
 
     # Print the average similarity scores
-    print("Answer Relevancy Score for Hypothetical-generated Questions:", avg_similarity_score)
+    print("Answer Relevancy Score:", avg_similarity_score)
     return avg_similarity_score
 
-# Function to compute how precise is the context in relations to the retrieved contexts. 
+# Function to compute how precise the context is in relation to the retrieved contexts
 def context_precision(ground_truth, contexts):
+    if pd.isnull(ground_truth):
+        return 0
     
     # Initialize the valid count
     valid_count = 0
-    # Load the Sentence Transformer model
-    model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
     # Encode the ground truth
     ground_truth_embedding = model.encode([ground_truth]) 
 
     # Iterate through each context
     for context in contexts:
+        if pd.isnull(context):
+            continue
         # Encode the context
         context_embedding = model.encode([context])
 
         # Calculate cosine similarity between context and ground truth
         similarity_score = util.cos_sim(ground_truth_embedding, context_embedding)[0][0]
-        valid_count+=similarity_score
+        valid_count += similarity_score
     
-    print(f"overall score attained: {valid_count}")
+    # print(f"Overall score attained: {valid_count.item()}")
 
-    precision_score = valid_count/len(contexts)
-    print(f"context precision score = {precision_score}")
-    return precision_score
+    precision_score = valid_count / len(contexts)
+    print(f"Context precision score = {precision_score.item()}")
+    return precision_score.item()
 
-# Function to evaluate how relevance the retrieved context is against the actual response. Currently Threshold = 50%
-def context_recall(GTs, contexts):
-    # Tokenize response into sentences
-    GT = sent_tokenize(GTs)
+# Function to evaluate how relevant the retrieved context is against the actual response
+def context_recall(ground_truth, contexts):
+    if pd.isnull(ground_truth):
+        return 0
+    
+    # Tokenize ground truth into sentences
+    GT = sent_tokenize(ground_truth)
 
     valid_context = []
     # Iterate through each response sentence
     for sentence in GT:
         for context in contexts:
+            if pd.isnull(context):
+                continue
             # Calculate similarity score with each context sentence
             similarity_scores = util.cos_sim(model.encode(sentence), model.encode(context))
-            if similarity_scores>= 0.5:
-                print(similarity_scores,context)
+            if similarity_scores >= 0.5:
+                print(similarity_scores, context)
                 valid_context.append(context)
 
-    print(f"No. of Valid Statements:{len(valid_context)}")
+    # print(f"No. of Valid Statements: {len(valid_context)}")
 
     # Calculate context recall score
     context_recall_score = len(valid_context) / len(contexts)
