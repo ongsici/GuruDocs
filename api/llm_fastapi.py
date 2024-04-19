@@ -88,7 +88,8 @@ def query(item: QueryInput):
 def newQuery(item:newQueryInput):
 
     conversation_rag, context = conversational_rag_chain(vectorstore_dict[item.vectorstore_id], item.model_option,item.user_query)
-    response = conversation_rag.invoke({"input":item.user_query},config={"configurable":{"session_id":item.session_id}},)["answer"]
+    generated_sesion_id = str(uuid.uuid4())
+    response = conversation_rag.invoke({"input":item.user_query},config={"configurable":{"session_id":generated_sesion_id}},)["answer"]
     faithfulness, Ans_Relevancy = eval(item.user_query,response,context,item.model_option)
     return {"response": response,  "context": context, "Faithfulness": faithfulness, "Answer Relevancy Score": Ans_Relevancy}
     
