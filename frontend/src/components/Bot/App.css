@@ -51,6 +51,11 @@
     width: auto;
   }
   
+  .react-chatbot-kit-chat-bot-message-container
+  > .react-chatbot-kit-chat-bot-message:first-child {
+  margin-left: 52.5px;
+}
+  
   .react-chatbot-kit-chat-bot-avatar-container {
     width: 40px;
     height: 40px;
@@ -85,7 +90,7 @@
     font-weight: medium;
     position: relative;
     /* width: auto !important; */
-    margin-left: auto;
+    margin-left: left;
     text-align: left;
   }
   
