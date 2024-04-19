@@ -125,7 +125,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# .env
+frontend/node_modules/psl/.env
 .venv
 env/
 venv/
