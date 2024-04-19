@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useRef, useState, useEffect } from "react";
+import React,{ useRef, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 // import { Card, CardContent, CircularProgress, Typography, Box } from '@material-ui/core';
@@ -40,6 +40,10 @@ export default function Summary({ model, setModel, pagesUuidList, setPagesUuidLi
             </Box>
         );
       }
+
+    const formatSummary = (summary) => {
+      return summary.split('\n').map((line, index) => <React.Fragment key={index}>{line}<br /></React.Fragment>);
+    };
     
     return (
       <div>
@@ -50,7 +54,7 @@ export default function Summary({ model, setModel, pagesUuidList, setPagesUuidLi
                           {fileName}
                       </Typography>
                       <Typography variant="body1">
-                          {summary}
+                          {formatSummary(summary)}
                       </Typography>
                   </CardContent>
               </Card>
