@@ -7,9 +7,7 @@
 
 ## SECTION 2 : EXECUTIVE SUMMARY / PAPER ABSTRACT
 
-
-
-
+![gurudocs example](images/example.png)
 
 
 ---
