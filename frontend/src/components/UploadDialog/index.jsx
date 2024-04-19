@@ -26,9 +26,15 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
   const fileRef = useRef(null);
   const [files, setFiles] = useState(null);
   const [showToast, setShowToast] = useState(false)
+
   const handleFileChange = (event) => {
     setFiles(event.target.files);
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFileName(selectedFile.name)
+    }
   };
+
   const handleUpload = () => {
     fileRef.current.click();
   };
@@ -36,7 +42,6 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
   const handleModelChange = (event) => {
     setModel(event.target.value);
   };
-
 
   const {
     success: postFilesSuccess,
@@ -130,7 +135,7 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
 
         <Box my={2}>
           <DialogContentText>
-            <b>Upload your PDFs here and click on 'Process'</b>
+            <b>Upload your PDF here and click on 'Process'</b>
           </DialogContentText>
           <input
             ref={fileRef}
@@ -147,6 +152,15 @@ export default function UploadDialog({ open, handleClose, model, setModel, pages
           >
             Upload
           </Button>
+
+          {files && (
+          <Box my={1}>
+            <DialogContentText>
+               {fileName || "No file selected"}
+            </DialogContentText>
+          </Box>
+          )}              
+          
         </Box>
 
         <Box my={2}>
