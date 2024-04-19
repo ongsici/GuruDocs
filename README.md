@@ -1,14 +1,13 @@
 ## SECTION 1 : PROJECT TITLE
 ## GURUDOCS: CHATBOT FOR QUERYING DOCUMENTS USING RAG and LLM
 
+![gurudocs example](images/example.png)
+
 
 ---
 
 
-## SECTION 2 : EXECUTIVE SUMMARY / PAPER ABSTRACT
-
-
-
+## SECTION 2 : EXECUTIVE SUMMARY 
 
 
 
@@ -42,11 +41,15 @@
 ```
 conda create -n gurudocs python=3.10 -y
 conda activate gurudocs
+git clone
+cd GuruDocs/
 pip install -r requirements.txt
 ollama pull llama2
 ollama pull mistral 
 ```
 ### Start Application
+
+You will need to start both the frontend and backend using the following codes:
 
 ```
 python main.py
