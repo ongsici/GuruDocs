@@ -51,13 +51,13 @@ def embed(item: FormDataInput):
         with open(file_path, 'wb') as f:
             f.write(base64string)
 
-        pages = get_pypdf_text(file_path)
+        pages = get_pypdf_text(file_data)
         pages_uuid = str(uuid.uuid4())
         pages_store[pages_uuid] = pages
         pages_uuid_list.append(pages_uuid)
     
         # Get document chunks
-        chunks = get_document_chunks(pages)
+        chunks = get_document_chunks(file_data)
     
         # Get vectorstore
         vectorstore = get_vectorstore(chunks, persist_directory)
@@ -81,8 +81,8 @@ def query(item: QueryInput):
 
     response = conversation_chain({'question': item.user_query})
     answer = response['answer']
-    # faithfulness, Ans_Relevancy = eval(item.user_query,answer,context,item.model_option)
-    return {"response": response}#,  "context": context, "Faithfulness": faithfulness, "Answer Relevancy Score": Ans_Relevancy}
+    faithfulness, Ans_Relevancy = eval(item.user_query,answer,context,item.model_option)
+    return {"response": response, "context": context, "Faithfulness": faithfulness, "Answer Relevancy Score": Ans_Relevancy}
     
 
 @app.post("/newquery")
