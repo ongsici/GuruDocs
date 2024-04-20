@@ -32,12 +32,20 @@
 
 `Refer to appendix <Installation & User Guide> in project report at Github Folder: ProjectReport`
 
+First, install Ollama. See download instructions [here](https://ollama.com/download)
+
+```
+git clone
+cd GuruDocs/
+ollama pull llama2
+ollama pull mistral 
+```
+
 ### 5.1 [Recommended] Docker Installation
 
 Prerequisites:
 - Docker 
 - Nvidia container toolkit (for running Docker with GPU)
-- Ollama (see download instructions [here](https://ollama.com/download))
 
 ```
 chmod +x ./docker_build.sh
@@ -51,21 +59,17 @@ chmod +x ./gurudocs.sh
 ./gurudocs.sh start
 ./gurudocs.sh stop
 ```
+Once you have started the application, your webpage should automatically pop up. You can then upload your PDF documents and chat with GuruDocs!
 
 ### 5.2 Local Installation
 
 - Python 3.10
-- Ollama (see download instructions [here](https://ollama.com/download))
 - NodeJS v18.20.1
 
 ```
 conda create -n gurudocs python=3.10 -y
 conda activate gurudocs
-git clone
-cd GuruDocs/
 pip install -r requirements.txt
-ollama pull llama2
-ollama pull mistral 
 ```
 ##### Start Application
 
@@ -76,9 +80,6 @@ python main.py
 cd frontend/
 npm start
 ```
-
-Once you have started the application, your webpage should automatically pop up. You can then upload your PDF documents and chat with GuruDocs!
-
 
 ##### Troubleshoot
 
