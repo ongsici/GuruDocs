@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  gurudocs_backend:
+    image: gurudocs_backend:latest
+    network_mode: "host"
+    deploy:
+        resources:
+          reservations:
+            devices:
+              - driver: nvidia
+                device_ids: ["0"]
+                capabilities: [gpu]
+
+  gurudocs_frontend:
+    image: gurudocs_frontend:latest
+    network_mode: "host"
+    command: bash -c "npm start"
+    environment:
+      PORT: ${PORT}
+      REACT_APP_BACKEND_URL: ${REACT_APP_BACKEND_URL}
+
+
