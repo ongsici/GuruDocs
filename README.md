@@ -28,7 +28,9 @@ GuruDocs is a free chatbot designed to enhance the efficiency of information ret
 
 ![gurudocs architecture](images/architecture.png)
 
-![demo](https://youtu.be/Pukb5Xa0ToQ)
+#### Product Demo:
+
+[![demo](https://img.youtube.com/vi/Pukb5Xa0ToQ/0.jpg)](https://youtu.be/Pukb5Xa0ToQ)
 
 ---
 
