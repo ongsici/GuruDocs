@@ -9,7 +9,7 @@
 
 ## SECTION 2 : EXECUTIVE SUMMARY 
 
-
+GuruDocs is a free chatbot designed to enhance the efficiency of information retrieval from lengthy policy and/or regulatory documents.  Leveraging Retrieval-Augmented Generation (RAG) and Large Language Models (LLMs), GuruDocs offers context-aware search results, thus improving user experience and productivity. This project addresses the limitations of keyword-based search systems and the challenges in fine-tuning LLMs for specific document queries. 
 
 ---
 
@@ -17,14 +17,18 @@
 
 | Official Full Name  | Student ID (MTech Applicable)  | Work Items (Who Did What) |
 | :------------ |:---------------:| :-----| 
-| Alvin Wong Ann Ying | A0266486M | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| 
-| Brandon Chua Hong Huei | A0168608U | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| 
-| Ong Si Ci | A0266450E | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz|
+| Alvin Wong Ann Ying | A0266486M | <ul><li>Created modified version of RAGAs evaluation library that does not require OpenAI API key</li><li>Implemented end-to-end evaluation workflow</li></ul>| 
+| Brandon Chua Hong Huei | A0168608U | <ul><li>Designed and implemented RAG components</li><li>Experimented with various RAG components to optimise GuruDocs performance</li></ul>| 
+| Ong Si Ci | A0266450E | <ul><li>Project lead/manager</li><li>Frontend and backend development</li></ul><ul><li>Initial prototype of RAG components</li><li>Dockerisation of product for deployment</li></ul>|
 
 
 ---
 
-## SECTION 4 : VIDEO OF SYSTEM MODELLING & USE CASE DEMO
+## SECTION 4 : SYSTEM ARCHITECTURE & USE CASE DEMO
+
+![gurudocs architecture](images/architecture.png)
+
+![demo](https://youtu.be/Pukb5Xa0ToQ)
 
 ---
 
