@@ -47,7 +47,7 @@ export default function ActionProvider({ createChatBotMessage, setState, childre
 
   useEffect(() => {
     if (postFilesResponse) {
-      const botMessage = createChatBotMessage(postFilesResponse.response.answer);
+      const botMessage = createChatBotMessage(postFilesResponse.response);
         setState((prev) => ({
           ...prev,
           messages: [...prev.messages, botMessage],

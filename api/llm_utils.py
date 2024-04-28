@@ -20,7 +20,8 @@ import os
 import pandas as pd
 import re
 import nltk
-from api.metrics import faithfulness, generate_questions, answer_relevancy
+# nltk.download('punkt')
+# from api.metrics import faithfulness, generate_questions, answer_relevancy
 
 class Document:
     def __init__(self, page_content, metadata):
@@ -219,11 +220,12 @@ def split_into_sentences(text):
         sentences.extend(element_sentences)
     return sentences
 
-def eval(query,answer,context,model_option):
-    page_contents = [doc.page_content for doc in context]
-    output = split_into_sentences(page_contents)
-    score_faithfulness = faithfulness(answer,output)
+# def eval(query,answer,context,model_option):
+#     page_contents = [doc.page_content for doc in context]
+#     output = split_into_sentences(page_contents)
+#     score_faithfulness = faithfulness(answer,output)
 
-    predicted_Qn = generate_questions(answer,model_option)
-    score_Ans_Relevancy = answer_relevancy(query,predicted_Qn)
-    return score_faithfulness, score_Ans_Relevancy
+#     predicted_Qn = generate_questions(answer,model_option)
+#     score_Ans_Relevancy = answer_relevancy(query,predicted_Qn)
+#     return score_faithfulness, score_Ans_Relevancy
+
