@@ -16,14 +16,7 @@ const config = {
       </div>
     ),
   },
-  // customStyles: {
-  //   botMessageBox: {
-  //     backgroundColor: '#5BBCFF',
-  //   },
-  //   chatButton: {
-  //     backgroundColor: '#5ccc9d',
-  //   },
-  // },
+
 };
 
 export default config;

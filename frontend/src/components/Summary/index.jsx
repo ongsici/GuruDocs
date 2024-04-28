@@ -2,7 +2,6 @@
 import React,{ useRef, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-// import { Card, CardContent, CircularProgress, Typography, Box } from '@material-ui/core';
 import { REACT_APP_BACKEND_URL } from "../../config";
 import { useFetch } from "../../hooks/useFetch";
 import { CircularProgress, Card, CardContent } from "@mui/material";
@@ -12,9 +11,7 @@ export default function Summary({ model, setModel, pagesUuidList, setPagesUuidLi
     const [summaries, setSummaries] = useState([]);
   
     const {
-        // success: postFilesSuccess,
         loading: postFilesLoading,
-        // error: postFilesError,
         renderFetch: getSummary,
         data: postFilesResponse
       } = useFetch(`${REACT_APP_BACKEND_URL}/summary`, "POST");

@@ -1,9 +1,7 @@
 import React from 'react';
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useFetch } from "../../hooks/useFetch";
 import { REACT_APP_BACKEND_URL } from "../../config";
-import { CircularProgress } from "@mui/material";
-import Box from "@mui/material/Box";
 
 export default function ActionProvider({ createChatBotMessage, setState, children, model, setModel, vectorstoreUuidList, setVectorstoreUuidList }) {
   const {
@@ -60,14 +58,6 @@ export default function ActionProvider({ createChatBotMessage, setState, childre
     }));  
     }
   }, [postFilesResponse, getResponseError]);
-
-  // if (getResponseLoading) {
-  //   return (
-  //     <Box m={5}>
-  //       <CircularProgress />
-  //     </Box>
-  // );
-  // }
  
   return (
     <div>
