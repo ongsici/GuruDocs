@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from api.api_data_models import FormDataInput, SummaryInput, QueryInput, newQueryInput
+from api.api_data_models import FormDataInput, SummaryInput, QueryInput
 import os
 import uuid
-from api.llm_utils import get_pypdf_text, get_document_chunks, get_vectorstore, get_conversation_chain, get_summary, conversational_rag_chain, eval
+from api.llm_utils import get_pypdf_text, get_document_chunks, get_vectorstore,  get_summary,conversational_rag_chain
 from fastapi.middleware.cors import CORSMiddleware
 import base64
 import shutil
@@ -75,24 +75,13 @@ def embed(item: FormDataInput):
             "vectorstore_uuid_list": vectorstore_uuid_list}
 
 @app.post("/query")
-def query(item: QueryInput):
+def newQuery(item: QueryInput):
 
-    conversation_chain, context = get_conversation_chain(vectorstore_dict[item.vectorstore_id], item.model_option, item.user_query)
-    response = conversation_chain({'question': item.user_query})
-    answer = response['answer']
-    faithfulness, Ans_Relevancy = eval(item.user_query,answer,context,item.model_option)
-    return {"response": response, "context": context, "Faithfulness": faithfulness, "Answer Relevancy Score": Ans_Relevancy}
-    
-
-@app.post("/newquery")
-def newQuery(item:newQueryInput):
-
-    conversation_rag, context = conversational_rag_chain(vectorstore_dict[item.vectorstore_id], item.model_option,item.user_query)
+    conversation_rag, _ = conversational_rag_chain(vectorstore_dict[item.vectorstore_id], item.model_option,item.user_query)
     generated_sesion_id = str(uuid.uuid4())
     response = conversation_rag.invoke({"input":item.user_query},config={"configurable":{"session_id":generated_sesion_id}},)["answer"]
-    faithfulness, Ans_Relevancy = eval(item.user_query,response,context,item.model_option)
-    return {"response": response,  "context": context, "Faithfulness": faithfulness, "Answer Relevancy Score": Ans_Relevancy}
     
+    return {"response": response}
 
 @app.post("/summary")
 def summary(item: SummaryInput):
