@@ -67,9 +67,6 @@ def answer_relevancy(query, generated_QN):
 
 # Function to compute how precise the context is in relation to the retrieved contexts
 def context_precision(ground_truth, contexts):
-    if pd.isnull(ground_truth):
-        return 0
-    
     # Initialize the valid count
     valid_count = 0
 
@@ -78,8 +75,6 @@ def context_precision(ground_truth, contexts):
 
     # Iterate through each context
     for context in contexts:
-        if pd.isnull(context):
-            continue
         # Encode the context
         context_embedding = model.encode([context])
 
@@ -95,9 +90,6 @@ def context_precision(ground_truth, contexts):
 
 # Function to evaluate how relevant the retrieved context is against the actual response
 def context_recall(ground_truth, contexts):
-    if pd.isnull(ground_truth):
-        return 0
-    
     # Tokenize ground truth into sentences
     GT = sent_tokenize(ground_truth)
 
@@ -105,8 +97,6 @@ def context_recall(ground_truth, contexts):
     # Iterate through each response sentence
     for sentence in GT:
         for context in contexts:
-            if pd.isnull(context):
-                continue
             # Calculate similarity score with each context sentence
             similarity_scores = util.cos_sim(model.encode(sentence), model.encode(context))
             if similarity_scores >= 0.5:
