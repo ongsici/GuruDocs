@@ -3,6 +3,8 @@ import nltk
 import uuid
 import csv
 import re
+import argparse
+
 from langchain_community.document_loaders.pdf import PyPDFLoader  
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_community.vectorstores import Chroma
@@ -20,6 +22,20 @@ from api.metrics import context_precision, context_recall, faithfulness, generat
 vectorstore_uuid_list = []
 vectorstore_dict, conversation_chain_store, pages_store = ({} for _ in range(3))
 count = 0
+
+# Define the argument parser
+parser = argparse.ArgumentParser(description='Process file paths for Q&A evaluation.')
+parser.add_argument('--pdf_paths', nargs='+', default=["/home/mraway/Desktop/src/QA_Summary/PDFs/NTUC.pdf"],
+                    help='List of file paths for the PDF documents.')
+parser.add_argument('--query_file', default='sample_NTUC.txt',
+                    help='File path for the evaluation queries with ground truths provided.')
+parser.add_argument('--persist_directory', default='docs/chroma/',
+                    help='Directory path for persistence of vectorstore data.')
+parser.add_argument('--output_path', default='output.csv',
+                    help='File path to save the evaluation results.')
+
+# Parse the arguments
+args = parser.parse_args()
 
 class Document:
     def __init__(self, page_content, metadata):
@@ -170,11 +186,11 @@ def eval(query,answer,context,model_option):
     score_Ans_Relevancy = answer_relevancy(query,predicted_Qn)
     return score_faithfulness, score_Ans_Relevancy
 
-# Example usage:
-file_paths = ["/home/mraway/Desktop/src/QA_Summary/PDFs/NTUC.pdf"]  # Replace with the location for the PDFs
-query_file = 'sample_NTUC.txt' # Replace with the location for the eval queries with GTs provided. refer to the format
-persist_directory = 'docs/chroma/'
-output_path = 'output.csv'
+# Example usage which access the arguments
+file_paths = args.pdf_paths
+query_file = args.query_file
+persist_directory = args.persist_directory
+output_path = args.output_path
 
 #Get Q&A Pairs
 qa_pairs = read_text_file(query_file)
