@@ -96,7 +96,6 @@ cd frontend/
 rm -rf node_modules
 npm install
 ```
-
 ---
 
 ## SECTION 6: Batch Inference
@@ -106,16 +105,7 @@ To run the evaluation script for batch inference, follow these steps:
 ### 2. Folder Structure for Utils
 The `utils` folder contains the following files:
 
-utils/
-│
-├── eval.py # Evaluation script for batch inference
-├── output_Adobe.csv # Output file after finishing the batch processing for Adobe
-├── output_NTUC.csv # Output file after finishing the batch processing for NTUC
-├── init.py
-├── pycache # Cached Python files (generated automatically)
-├── sample_NTUC.txt # Text file containing QA pairs for NTUC
-├── sample_Adobe.txt # Text file containing QA pairs for Adobe
-└── sample.txt # General text file containing QA pairs
+![Sample Output Image](utils/images/folder_structure.png)
 
 ### 3. Running the Evaluation Script
 
@@ -138,13 +128,13 @@ python -m utils.eval --pdf_paths "/home/mraway/Desktop/src/QA_Summary/PDFs/NTUC.
 
 When the evaluation script is run successfully, it generates output files containing the evaluation results. Below is a sample output image showing the structure of the output files:
 
-![Sample Output Image](utils/eval_outcome.png)
+![Sample Output Image](utils/images/eval_outcome.png)
 
 ### 6 CSV Output Content
 
 Additionally, here is a sample image displaying the content of the CSV output file:
 
-![CSV Output Content](utils/csv_content.png)
+![CSV Output Content](utils/images/csv_content.png)
 
 ## SECTION 7 : PROJECT REPORT / PAPER
 
