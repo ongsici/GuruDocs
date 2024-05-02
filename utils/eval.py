@@ -25,11 +25,11 @@ count = 0
 
 # Define the argument parser
 parser = argparse.ArgumentParser(description='Process file paths for Q&A evaluation.')
-parser.add_argument('--pdf_paths', nargs='+', default=["/home/mraway/Desktop/src/QA_Summary/PDFs/NTUC.pdf"],
+parser.add_argument('--pdf_paths', nargs='+', default=["/home/mraway/Desktop/src/QA_Summary/PDFs/NTUC.pdf"], required=True,
                     help='List of file paths for the PDF documents.')
-parser.add_argument('--query_file', default='sample_NTUC.txt',
+parser.add_argument('--query_file', default='sample_NTUC.txt', required=True,
                     help='File path for the evaluation queries with ground truths provided.')
-parser.add_argument('--persist_directory', default='docs/chroma/',
+parser.add_argument('--persist_directory', default='docs/chroma/', 
                     help='Directory path for persistence of vectorstore data.')
 parser.add_argument('--output_path', default='output.csv',
                     help='File path to save the evaluation results.')
