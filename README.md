@@ -38,6 +38,8 @@ GuruDocs is a free chatbot designed to enhance the efficiency of information ret
 
 `Refer to appendix <Installation & User Guide> in project report at Github Folder: ProjectReport`
 
+The product was developed and tested on Ubuntu versions 20.04 and 22.04.
+
 First, install Ollama. See download instructions [here](https://ollama.com/download)
 
 ```
@@ -72,11 +74,29 @@ Once you have started the application, your webpage should automatically pop up.
 - Python 3.10
 - NodeJS v18.20.1
 
+To install NodeJS:
+```
+# Install NVM
+sudo apt install curl
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+
+# Refresh terminal
+source ~/.bashrc
+
+# Verify Installation
+nvm --version
+
+# Install NodeJS v18.20.1
+nvm install 18.20.1
+
+```
+Create conda environment and install requirements:
 ```
 conda create -n gurudocs python=3.10 -y
 conda activate gurudocs
 pip install -r requirements.txt
 ```
+
 ##### Start Application
 
 You will need to start both the frontend and backend using the following codes:
