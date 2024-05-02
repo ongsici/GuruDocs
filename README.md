@@ -96,8 +96,46 @@ cd frontend/
 rm -rf node_modules
 npm install
 ```
-
 ---
-## SECTION 6 : PROJECT REPORT / PAPER
+
+## SECTION 6: Batch Inference
+
+To run the evaluation script for batch inference, follow these steps:
+
+### 1. Folder Structure for Utils
+The `utils` folder contains the following files:
+
+![Sample Output Image](utils/images/folder_structure.png)
+
+### 2. Running the Evaluation Script
+
+To run the evaluation script, use the following command:
+
+```bash
+python -m utils.eval --pdf_paths "/home/mraway/Desktop/src/QA_Summary/PDFs/NTUC.pdf" \
+                     --query_file "utils/sample.txt" \
+                     --persist_directory "docs/chroma/" \
+                     --output_path "utils/output.csv"
+```
+### 3. Explanation of Variables
+
+- `pdf_paths`: List of file paths for the PDF documents to be evaluated. Default value is `["/home/mraway/Desktop/src/QA_Summary/PDFs/NTUC.pdf"]`.
+- `query_file`: File path for the evaluation queries with ground truths provided. Default value is `"sample_NTUC.txt"`.
+- `persist_directory`: Directory path for persistence of vectorstore data. Default value is `"docs/chroma/"`.
+- `output_path`: File path to save the evaluation results. Default value is `"output.csv"`.
+
+### 4: Sample Output Score via Terminal
+
+When the evaluation script is run successfully, it generates output files containing the evaluation results. Below is a sample output image showing the structure of the output files:
+
+![Sample Output Image](utils/images/eval_outcome.png)
+
+### 5 CSV Output Content
+
+Additionally, here is a sample image displaying the content of the CSV output file:
+
+![CSV Output Content](utils/images/csv_content.png)
+
+## SECTION 7 : PROJECT REPORT / PAPER
 
 `Refer to project report at Github Folder: ProjectReport`
