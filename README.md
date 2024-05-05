@@ -36,7 +36,7 @@ GuruDocs is a free chatbot designed to enhance the efficiency of information ret
 
 ## SECTION 5 : USER GUIDE
 
-`Refer to appendix <Appendix 7.2: Installation & User Guide> in project report at Github Folder: ProjectReport`
+`Refer to appendix <Appendix 7.4: Installation & User Guide> in project report at Github Folder: ProjectReport`
 
 The product was developed and tested on Ubuntu versions 20.04 and 22.04.
 
